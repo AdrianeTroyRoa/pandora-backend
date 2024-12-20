@@ -1,4 +1,4 @@
-import { Controller, Dependencies, Get } from '@nestjs/common';
+import { Controller, Dependencies, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -19,8 +19,13 @@ export class AppController {
   }
 
   @Get('/greet')
-  getGreeting(){
-    const greeting = `good day!`
+  getGreeting() {
+    const greeting = `good day!`;
     return greeting;
+  }
+
+  @Post('/hello')
+  postGreeting() {
+    console.log('Hi from the frontend!');
   }
 }
