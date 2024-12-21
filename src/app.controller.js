@@ -1,4 +1,4 @@
-import { Controller, Dependencies, Get, Post } from '@nestjs/common';
+import { Controller, Dependencies, Get, Post, Body, Bind } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -25,7 +25,9 @@ export class AppController {
   }
 
   @Post('/hello')
-  postGreeting() {
-    console.log('Hi from the frontend!');
+  @Bind(Body())
+  postGreeting(zor) {
+    console.log(zor);
+    return 'this is a message';
   }
 }
