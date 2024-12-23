@@ -1,4 +1,4 @@
-import { Controller, Dependencies, Get, Post, Body, Bind } from '@nestjs/common';
+import { Controller, Dependencies, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -16,18 +16,5 @@ export class AppController {
   @Get('/fuck')
   letsFuck() {
     return this.appService.getFucked();
-  }
-
-  @Get('/greet')
-  getGreeting() {
-    const greeting = `good day!`;
-    return greeting;
-  }
-
-  @Post('/hello')
-  @Bind(Body())
-  postGreeting(zor) {
-    console.log(zor);
-    return 'Data received';
   }
 }
