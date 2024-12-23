@@ -20,6 +20,17 @@ export class AuthController {
     return this.authService.getHello();
   }
 
+  @Get('/get-users')
+  async getAllUsers() {
+    return await this.authService.findAll();
+  }
+
+  @Post('/create-user')
+  @Bind(Body())
+  async createUser(payload) {
+    return await this.authService.create(payload)
+  }
+
   @Post('/hello')
   @Bind(Body())
   postGreeting(zor) {

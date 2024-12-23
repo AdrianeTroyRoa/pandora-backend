@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { PrismaClientKnownRequestError } from '../../node_modules/@prisma/client/runtime/library';
 
 const db = new PrismaClient();
 
@@ -26,15 +27,32 @@ export class AuthService {
         },
       });
       await db.$disconnect();
+      console.info('User created');
       return 'User created';
+    } catch (err) {
+      console.error(err);
+      await db.$disconnect();
+      if (err instanceof PrismaClientKnownRequestError)
+        throw new BadRequestException(
+          'User email or number is already registered. Cannot create new user.',
+        );
+      else {
+        throw new BadRequestException('User info failed to register.');
+      }
+    }
+  }
+  update() {}
+  delete() {}
+  find(user_id) {}
+  async findAll() {
+    try {
+      const allUsers = await db.user.findMany();
+      await db.$disconnect();
+      return allUsers;
     } catch (err) {
       console.error(err);
       await db.$disconnect();
       process.exit(1);
     }
   }
-  update() {}
-  delete() {}
-  find(user_id) {}
-  findAll() {}
 }
