@@ -28,6 +28,6 @@ export class AppController {
   @Bind(Body())
   postGreeting(zor) {
     console.log(zor);
-    return 'this is a message';
+    return 'Data received';
   }
 }
