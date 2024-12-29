@@ -20,7 +20,11 @@ export class InquiryService {
     try {
       await db.inquiry.create({
         data: {
-          //inquiry columns
+          name: newInquiry.name,
+          email: newInquiry.email,
+          mobile_num: newInquiry.mobile_num,
+          subject: newInquiry.subject,
+          message: newInquiry.message,
         },
       });
       await db.$disconnect();
