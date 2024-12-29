@@ -1,6 +1,9 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '../../node_modules/@prisma/client/runtime/library';
+import {
+  PrismaClientInitializationError,
+  PrismaClientKnownRequestError,
+} from '../../node_modules/@prisma/client/runtime/library';
 
 const db = new PrismaClient();
 
@@ -27,11 +30,20 @@ export class ProductService {
       console.error(err);
       await db.$disconnect();
       if (err instanceof PrismaClientKnownRequestError)
-        throw new BadRequestException(
+        throw new HttpException(
           'Product already exists. Cannot create.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      else if (err instanceof PrismaClientInitializationError)
+        throw new HttpException(
+          'Database is possibly unreachable',
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       else {
-        throw new BadRequestException('Product failed to create.');
+        throw new HttpException(
+          'Product failed to create.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
     }
   }

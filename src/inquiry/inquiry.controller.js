@@ -20,8 +20,8 @@ export class InquiryController {
     return this.inquiryService.getHello();
   }
 
-  @Get('/get-users')
-  async getAllInquirys() {
+  @Get('/get-inquiries')
+  async getAllInquiry() {
     return await this.inquiryService.findAll();
   }
 

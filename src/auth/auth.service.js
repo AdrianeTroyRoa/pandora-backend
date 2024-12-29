@@ -1,7 +1,10 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { PrismaClientKnownRequestError } from '../../node_modules/@prisma/client/runtime/library';
+import {
+  PrismaClientInitializationError,
+  PrismaClientKnownRequestError,
+} from '../../node_modules/@prisma/client/runtime/library';
 
 const db = new PrismaClient();
 
@@ -33,11 +36,20 @@ export class AuthService {
       console.error(err);
       await db.$disconnect();
       if (err instanceof PrismaClientKnownRequestError)
-        throw new BadRequestException(
+        throw new HttpException(
           'User email or number is already registered. Cannot create new user.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      else if (err instanceof PrismaClientInitializationError)
+        throw new HttpException(
+          'Database is possibly unreachable',
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       else {
-        throw new BadRequestException('User info failed to register.');
+        throw new HttpException(
+          'User info failed to register.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
     }
   }
