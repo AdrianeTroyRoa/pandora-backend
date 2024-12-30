@@ -20,7 +20,10 @@ export class ProductService {
     try {
       await db.product.create({
         data: {
-          //product columns
+          name: newProduct.name,
+          num_left: newProduct.num_left,
+          description: newProduct.description,
+          image_src: newProduct.image_src,
         },
       });
       await db.$disconnect();
