@@ -20,23 +20,24 @@ export class ProductController {
     return this.productService.getHello();
   }
 
-  @Get('/get-users')
+  @Get('/get-products')
   async getAllProducts() {
     return await this.productService.findAll();
+    //return ['This', 'Should', 'Be', 'Seen'];
   }
 
   @Post('/add-product')
   @Bind(Body())
   async createProduct(payload) {
-    return await this.productService.create(payload)
+    return await this.productService.create(payload);
   }
 
   @Post('/hello')
   @Bind(Body())
   postGreeting(zor) {
-    console.warn("This is only a test.")
+    console.warn('This is only a test.');
     console.log(zor);
-    console.error("Text like this means error (this is only eg tho)")
+    console.error('Text like this means error (this is only eg tho)');
     return 'Data received';
   }
 }
