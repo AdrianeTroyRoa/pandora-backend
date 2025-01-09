@@ -40,4 +40,10 @@ export class ProductController {
     console.error('Text like this means error (this is only eg tho)');
     return 'Data received';
   }
+
+  @Get(':id')
+  @Bind(Param('id'))
+  async getProduct(id) {
+    return await this.productService.findById(id);
+  }
 }

@@ -52,7 +52,21 @@ export class ProductService {
   }
   update() {}
   delete() {}
-  find(product_id) {}
+  async findById(product_id) {
+    try {
+      const product = await db.product.findUnique({
+        where: {
+          id: product_id
+        }
+      })
+      await db.$disconnect();
+      return product;
+    } catch (err) {
+      console.error(err);
+      await db.$disconnect();
+      return;
+    }
+  }
   async findAll() {
     try {
       const allProducts = await db.product.findMany();
