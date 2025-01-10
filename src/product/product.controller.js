@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Body,
+  Param,
   Bind,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
