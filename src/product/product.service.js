@@ -56,17 +56,28 @@ export class ProductService {
     try {
       const product = await db.product.findUnique({
         where: {
-          id: product_id
-        }
-      })
+          id: product_id,
+        },
+      });
       await db.$disconnect();
       return product;
     } catch (err) {
       console.error(err);
       await db.$disconnect();
-      return;
+      if (err instanceof PrismaClientInitializationError)
+        throw new HttpException(
+          'Database is possibly unreachable',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      else {
+        throw new HttpException(
+          'Product failed to create.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
+
   async findAll() {
     try {
       const allProducts = await db.product.findMany();
