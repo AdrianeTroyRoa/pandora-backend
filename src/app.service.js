@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello() {
-    return 'Hello World!';
+    return { greeting: 'Hello World!' };
   }
   getFucked() {
-    return 'FUCK YOU';
+    return { greeting: 'FUCK YOU' };
   }
 }
