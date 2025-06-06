@@ -16,39 +16,42 @@ export class ProductService {
   async create(newProduct) {
     console.info('Creating product...');
 
-    //saving user info to database
-    try {
-      await db.product.create({
-        data: {
-          name: newProduct.name,
-          num_left: newProduct.num_left,
-          description: newProduct.description,
-          image_src: newProduct.image_src,
-        },
-      });
-      await db.$disconnect();
-      console.info('Product created');
-      return 'Product created';
-    } catch (err) {
-      console.error(err);
-      await db.$disconnect();
-      if (err instanceof PrismaClientKnownRequestError)
-        throw new HttpException(
-          'Product already exists. Cannot create.',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      else if (err instanceof PrismaClientInitializationError)
-        throw new HttpException(
-          'Database is possibly unreachable',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      else {
-        throw new HttpException(
-          'Product failed to create.',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+    for (const i of Object.keys(newProduct)) {
+      console.log(`${i}: ${newProduct[i]}`);
     }
+    //saving product info to database
+    //try {
+    //  await db.product.create({
+    //    data: {
+    //      name: newProduct.name,
+    //      num_left: newProduct.num_left,
+    //      description: newProduct.description,
+    //      image_src: newProduct.image_src,
+    //    },
+    //  });
+    //  await db.$disconnect();
+    //  console.info('Product created');
+    //  return 'Product created';
+    //} catch (err) {
+    //  console.error(err);
+    //  await db.$disconnect();
+    //  if (err instanceof PrismaClientKnownRequestError)
+    //    throw new HttpException(
+    //      'Product already exists. Cannot create.',
+    //      HttpStatus.INTERNAL_SERVER_ERROR,
+    //    );
+    //  else if (err instanceof PrismaClientInitializationError)
+    //    throw new HttpException(
+    //      'Database is possibly unreachable',
+    //      HttpStatus.INTERNAL_SERVER_ERROR,
+    //    );
+    //  else {
+    //    throw new HttpException(
+    //      'Product failed to create.',
+    //      HttpStatus.INTERNAL_SERVER_ERROR,
+    //    );
+    //  }
+    //}
   }
   update() {}
   delete() {}
