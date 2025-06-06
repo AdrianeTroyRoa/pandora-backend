@@ -6,8 +6,11 @@ import {
   Body,
   Param,
   Bind,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
 @Dependencies(ProductService)
@@ -28,8 +31,10 @@ export class ProductController {
   }
 
   @Post('/add-product')
-  @Bind(Body())
-  async createProduct(payload) {
+  @UseInterceptors(FileInterceptor('file'))
+  @Bind(UploadedFile(), Body())
+  async createProduct(file, payload) {
+    console.log(file ?? '');
     return await this.productService.create(payload);
   }
 
