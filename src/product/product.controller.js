@@ -11,6 +11,28 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import multer from 'multer';
+import fs from 'fs';
+
+//file upload
+const uploadFolder = './uploads';
+if (!fs.existsSync(uploadFolder)) {
+  fs.mkdirSync(uploadFolder);
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadFolder); // Save to ./uploads
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + '-' + file.originalname;
+    cb(null, uniqueName);
+  },
+});
+
+const uploadOptions = {
+  storage: storage,
+};
 
 @Controller('product')
 @Dependencies(ProductService)
@@ -31,11 +53,11 @@ export class ProductController {
   }
 
   @Post('/add-product')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', uploadOptions))
   @Bind(UploadedFile(), Body())
   async createProduct(file, payload) {
-    console.log(file ?? '');
-    return await this.productService.create(payload);
+    console.log(file.filename, 'uploaded successfully' ?? '');
+    return await this.productService.create(file.filename, payload.payload);
   }
 
   @Post('/hello')
