@@ -87,6 +87,7 @@ export class ProductService {
     try {
       const allProducts = await db.product.findMany();
       await db.$disconnect();
+      console.info(allProducts, '\n...GET ALL PRODUCTS request fulfilled');
       return allProducts;
     } catch (err) {
       console.error(err);
