@@ -26,20 +26,20 @@ export class ProductService {
       await db.product.create({
         data: {
           name: parsedNewProduct.name,
-          num_left: parsedNewProduct.num_left,
+          num_left: parseInt(parsedNewProduct.num_left),
           description: parsedNewProduct.description,
           image_src: parsedNewProduct.image_src,
         },
       });
       await db.$disconnect();
       console.info('Product created');
-      return 'Product created';
+      return 'Product entry created';
     } catch (err) {
       console.error(err);
       await db.$disconnect();
       if (err instanceof PrismaClientKnownRequestError)
         throw new HttpException(
-          'Product already exists. Cannot create.',
+          'Product entry already exists. Cannot create.',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       else if (err instanceof PrismaClientInitializationError)
@@ -49,7 +49,7 @@ export class ProductService {
         );
       else {
         throw new HttpException(
-          'Product failed to create.',
+          'Product entry failed to create.',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
