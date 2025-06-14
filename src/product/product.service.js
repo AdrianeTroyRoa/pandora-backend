@@ -55,8 +55,50 @@ export class ProductService {
       }
     }
   }
-  update() {}
+
+  async update(id, fileName, updatedProduct) {
+    const productToUpdate = this.findById(id);
+    let parsedUpdatedProduct = JSON.parse(updatedProduct);
+    parsedUpdatedProduct = {
+      ...parsedUpdatedProduct,
+      image_src: fileName ?? productToUpdate.image_src,
+    };
+    for (const i of Object.keys(parsedUpdatedProduct)) {
+      console.log(`${i}: ${parsedUpdatedProduct[i]}`);
+    }
+
+    try {
+      const updateProduct = await db.product.update({
+        where: {
+          id: parsedUpdatedProduct.id,
+        },
+        data: {
+          name: parsedUpdatedProduct.name,
+          num_left: parseInt(parsedUpdatedProduct.num_left),
+          description: parsedUpdatedProduct.description,
+          image_src: parsedUpdatedProduct.image_src,
+        },
+      });
+
+      return updateProduct;
+    } catch (err) {
+      await db.$disconnect();
+      if (err instanceof PrismaClientInitializationError)
+        throw new HttpException(
+          'Database is possibly unreachable',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      else {
+        throw new HttpException(
+          'Product failed to find.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+  }
+
   delete() {}
+
   async findById(product_id) {
     try {
       const product = await db.product.findUnique({
@@ -76,7 +118,7 @@ export class ProductService {
         );
       else {
         throw new HttpException(
-          'Product failed to create.',
+          'Product failed to find.',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -92,7 +134,17 @@ export class ProductService {
     } catch (err) {
       console.error(err);
       await db.$disconnect();
-      return;
+      if (err instanceof PrismaClientInitializationError)
+        throw new HttpException(
+          'Database is possibly unreachable',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      else {
+        throw new HttpException(
+          'Products failed to find.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 }

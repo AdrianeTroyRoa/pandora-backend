@@ -60,6 +60,19 @@ export class ProductController {
     return await this.productService.create(file.filename, payload.payload);
   }
 
+  @Update('/update-product/:id')
+  @UseInterceptors(FileInterceptor('file', uploadOptions))
+  @Bind(Param('id'), UploadedFile(), Body())
+  async updateProduct(id) {
+    if (file)
+      return await this.productService.update(
+        id,
+        file.filename,
+        payload.payload,
+      );
+    return await this.productService.update(id, payload.payload);
+  }
+
   @Post('/hello')
   @Bind(Body())
   postGreeting(zor) {
